@@ -1,0 +1,47 @@
+#include <iostream>
+using namespace std;
+
+#define LenArray 10
+
+int CalcMedia(int numeros[])
+{
+	int total = 0;
+	
+	for(int i = 0; i < LenArray; i++){
+		total += numeros[i];
+	}
+	
+	int media = total / LenArray;
+	cout << "Media: " << media << endl;
+	return media;
+}
+
+void VerificaMaiores(int numeros[],int media)
+{
+	int qtdMaiores = 0;
+	int maiores[LenArray] = {};
+	
+	for (int i = 0; i < LenArray; i++){
+		if(numeros[i] > media){
+			maiores[qtdMaiores] = numeros[i];
+			qtdMaiores++;
+		}
+	}	
+	cout << "Maiores: ";
+	for(int i = 0; i < LenArray; i++){
+		cout << maiores[i] << " ";
+	}
+}
+
+int main(int argc , char** argv)
+{
+ 	int numeroarray[LenArray];
+	for(int i =0; i < LenArray; i++){
+		cout << "digite um numero qualquer: ";
+		cin >> numeroarray[i];
+	}
+	int media = CalcMedia(numeroarray);
+	VerificaMaiores(numeroarray,media);
+	
+	return 0;
+}
