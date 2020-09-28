@@ -1,0 +1,230 @@
+#include <iostream>
+using namespace std;
+
+struct Lista
+{
+	string nome;
+	int prontuario;
+	double salario;
+	struct Lista *prox;
+};
+
+Lista* init()
+{
+	return NULL;
+}
+
+int isEmpty(Lista* lista)
+{
+	return (lista == NULL);
+}
+
+Lista* insert(Lista* lista, string nome, int prontuario, double salario)
+{
+	Lista* novoFuncionario = new Lista;
+	novoFuncionario->nome = nome;
+	novoFuncionario->prontuario = prontuario;
+	novoFuncionario->salario = salario;
+	novoFuncionario->prox = lista;
+	return novoFuncionario;
+}
+
+
+void print(Lista* lista)
+{
+	double totalsalario = 0;
+	Lista* aux;
+	aux = lista;
+	
+	cout << "------------ LISTAGEM DE FUNCIONARIOS ------------" << endl;
+	while (aux != NULL)
+	{
+		cout << "Nome: " << aux->nome << endl;
+		cout << "Prontuario: " << aux->prontuario << endl;
+		cout << "Salario: " << aux->salario << endl << endl;
+		totalsalario += aux->salario;
+
+		aux = aux->prox;
+	}
+	
+	cout << "Salario total dos funcionarios: " << totalsalario << endl;
+	cout << "-------------------------------------------------" << endl;
+	
+}
+
+Lista* remove(Lista* lista, int prontuario)
+{
+	Lista *ant = NULL;
+	Lista *aux;
+	
+	aux = lista;
+	while (aux != NULL && aux->prontuario != prontuario)
+	{
+		ant = aux;
+		aux = aux->prox;
+	}
+	if (aux == NULL)
+	{
+		return lista;
+	}
+	if (ant == NULL) // era primeiro
+	{
+		lista = aux->prox;
+	}
+	else // estava no meio
+	{
+		ant->prox = aux->prox;
+	}
+	free(aux);
+	return lista;
+}
+
+void freeList(Lista* lista)
+{
+	Lista *aux;
+	aux = lista;
+	while (aux != NULL)
+	{
+		Lista *ant = aux->prox;
+		free(aux);
+		aux = ant;
+	}
+}
+
+Lista* find(Lista* lista, int prontuario)
+{
+	Lista* aux;
+	aux = lista;
+	while (aux != NULL && aux->prontuario != prontuario)
+	{
+		aux = aux->prox;
+	}
+	if (aux == NULL)
+	{
+		aux = new Lista;
+		aux->prontuario = -1;
+		aux->prox = NULL;
+	}
+	return aux;
+}
+int main(int argc, char** argv)
+{
+	
+	int opcao = 1;
+	string nome;
+	int prontuario;
+	double salario;
+	int option;
+	
+	Lista *funcionarioList;
+	funcionarioList = init();
+	
+	cout << "Lista vazia: " << (isEmpty(funcionarioList)?"Sim":"Nao") << endl;
+	
+	funcionarioList = insert(funcionarioList, "Leandro", 3005372, 1500.25);
+	funcionarioList = insert(funcionarioList, "Carlos", 3007584, 2850.75);
+	
+	
+	// INICIO DAS ESCOLHAS
+	while (opcao == 1) {
+			
+		cout << "Escolha uma opcao: " << endl;
+		cout << "0. Sair" << endl;
+		cout << "1. Incluir" << endl;
+		cout << "2. Excluir" << endl;
+		cout << "3. Pesquisar" << endl;
+		cout << "4. Listar" << endl;
+		cin >> option; 
+		
+		switch(option)
+		{
+			case 0: {
+				cout << "Saindo...";
+				freeList(funcionarioList);  
+				return 0;
+			}break;
+		
+			case 1:{
+				cout << "------------ INCLUSAO DE FUNCIONARIO ------------" << endl;
+				cout << "Insira o nome: ";
+				cin >> nome;
+				cout << "Insira o prontuario: ";
+				cin >> prontuario;
+				cout << "Insira o salario: ";
+				cin >> salario;
+				
+				Lista *procurado = find(funcionarioList,prontuario); 
+				if (procurado->prontuario > -1) {
+			  	   cout << "O prontuario do funcionario ja existe! Tente novamente com outro prontuario." <<  endl;
+ 	 	 	 	   cout << "-------------------------------------------------" << endl;	
+				} else {
+			   	   funcionarioList = insert(funcionarioList, nome, prontuario, salario);
+					print(funcionarioList);
+			    };
+			    			
+				
+			} break;
+		
+		
+			case 2: {
+				cout << "------------ EXCLUSAO DE FUNCIONARIO ------------" << endl;
+				cout << "Insira o prontuario do usuario que deseja remover: ";
+				cin >> prontuario;
+				
+				Lista *procurado = find(funcionarioList,prontuario); 
+				if (procurado->prontuario > -1)
+				{		  
+				   int confirm = 0; 
+			  	   cout << "Deseja remover este funcionario?" << endl;
+		           cout	<< "Nome: " << procurado->nome << " |Prontuario: " << procurado->prontuario << " |Salario: "	<< procurado->salario << endl;
+		           
+		           do {
+					cout << "0.Nao | 1. Sim" << endl;				   
+	   	   	   	    cin >> confirm;
+				   } while (confirm != 1 && confirm != 0);
+		           
+				   
+				   if (confirm == 1){
+					   funcionarioList = remove(funcionarioList, prontuario);
+					   cout <<"Funcionario removido com sucesso!." << endl;	
+				   } else {
+	   	   	   	   cout <<"Nao removido." << endl;
+					}   
+				} else {
+			   	   cout <<"Funcionario nao encontrado!" << endl;
+			    };
+			    
+			    cout << "-------------------------------------------------" << endl;
+			} break;
+		
+		
+			case 3:{
+				cout << "------------ BUSCA DE FUNCIONARIO ------------" << endl;
+				cout << "Insira o prontuario do funcionario a ser buscado: ";
+				cin >> prontuario;
+				Lista *procurado = find(funcionarioList,prontuario); 
+				if (procurado->prontuario > -1) {
+			  	   cout << "Resultado da busca: " <<  endl;	
+				   cout << "Nome: " << procurado->nome <<  endl;
+				   cout << "Prontuario: " << procurado->prontuario <<  endl;
+				   cout << "Salario: " << procurado->salario <<  endl;
+				   
+				} else {
+			   	   cout <<"Funcionario nao encontrado!" << endl;
+			    };
+			    cout << "-------------------------------------------------" << endl;	
+		   } break;
+	
+			case 4: {
+				print(funcionarioList); 
+			}break;
+		}
+		
+		do {
+		cout << endl <<"Deseja realizar outra acao? 0. Nao | 1. Sim"  << endl;
+		cin >> opcao;
+		} while (opcao != 1 && opcao != 0);
+	}
+		
+	return 0;
+}
