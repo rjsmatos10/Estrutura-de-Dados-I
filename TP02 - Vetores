@@ -1,0 +1,310 @@
+//Renan Josué Silva de Matos 	CB3007162
+
+#include <iostream>
+#include <stdio.h>
+#include <time.h>
+
+using namespace std;
+
+class Data
+{
+	private: 	
+	   int dia;
+	   int mes;
+	   int ano;	
+	   string datacompleta;
+	   
+    public:
+    	Data(int dia, int mes, int ano)
+		{
+			this -> dia = dia;
+			this -> mes = mes;
+			this -> ano = ano;
+		}
+		
+		Data()
+		{
+			this-> dia = 0;
+			this-> mes = 0;
+			this-> ano = 0;
+		}
+		
+    	void setDia(int dia)
+    	{
+			this->dia = dia;
+		}
+		void setMes(int mes)
+    	{
+			this->mes = mes;
+		}
+		void setAno(int ano)
+    	{
+			this->ano = ano;
+		}
+		
+		int getDia()
+		{
+			return this->dia;
+		}
+		int getMes()
+		{
+			return this->mes;
+		}
+		int getAno()
+		{
+			return this->ano;
+		}
+				
+		string getNascData()
+		{
+		    return to_string(this -> dia) + "/" + to_string(this -> mes) + "/" + to_string(this -> ano);
+		}
+};
+
+class Contato
+{
+	private: 
+       string email;
+	   string nome;
+	   string telefone;	
+	   Data datapessoa;	
+	   
+    public:
+    	Contato(string emailInformado, string nomeInformado, string telefoneInformado) {
+			this -> email = emailInformado;
+			this -> nome = nomeInformado;
+			this -> telefone = telefoneInformado;
+		}
+		Contato() {
+			this -> email = "";
+			this -> nome = "";
+			this -> telefone = "";
+		}
+		
+		void setEmail(string emailInformado) {
+			this -> email = emailInformado;
+		}
+		string getEmail () {
+			return this -> email;
+		}
+		
+		void setNome(string nomeInformado) {
+			this -> nome = nomeInformado;
+		}
+		string getNome () {
+			return this -> nome;
+		}
+		
+		void setTelefone(string telefoneInformado) {
+			this -> telefone = telefoneInformado;
+		}
+		string getTelefone (){
+			return this -> telefone;
+		}
+		
+		void setData(Data dataInformada){
+			this -> datapessoa = dataInformada;
+		}					
+		string getNascData (){
+			Data *dataClasse = &datapessoa;
+			return dataClasse -> getNascData();
+		}
+		
+		int getIdade (){
+			
+			// Pegando data atual do sistema
+			time_t mytime;
+		    mytime = time(NULL);
+		    struct tm tm = *localtime(&mytime);
+		    int atualDay = tm.tm_mday;  // DIA ATUAL
+		    int atualMonth = tm.tm_mon + 1; // MES ATUAL
+			int atualYear = tm.tm_year + 1900; // ANO ATUAL
+
+		    //RECEBENDO DATA DE ANIVERSARIO
+		    Data *dataClasse = &datapessoa;
+			
+			int bDay = dataClasse -> getDia();  // DIA DO ANIVERSARIO
+		    int bMonth = dataClasse -> getMes();  // MES DO ANIVERSARIO
+			int bYear = dataClasse -> getAno();  // ANO DO ANIVERSARIO 
+						
+			// CONFERINDO IDADE
+			if (atualMonth >= bMonth && atualDay >= bDay  ){
+				return atualYear-bYear;
+			} 
+			return atualYear-bYear-1;			
+		}
+};    
+
+
+void CadastrarUsuarios(Contato objetosInseridos[], Data datasObjetos[]) {
+		
+	Data auxNasc [10];
+		
+	for (int i = 0; i <10; i++){
+		
+		int opcao = 0;
+		// REDEFININDO INFORMACOES PADROES
+		string nomeTemp = "Leandro Santos";
+		string emailTemp = "lsaantos@outlook.com";
+		string telefoneTemp = "13988226584";
+		int diaTemp = 03;
+		int mesTemp = 07;
+		int anoTemp = 2001;
+		
+		
+		while (opcao != 1 && opcao!= 2){
+			cout << "Deseja inserir as informacoes do novo contato? [1]Sim - [2]Nao. ";
+			cin >> opcao;
+	
+			if (opcao == 1) {
+				cout << "Insira seu email: ";
+				cin >> emailTemp;
+				cout << "Insira seu nome: ";
+				cin >> nomeTemp;
+				cout << "Insira seu telefone: ";
+				cin >> telefoneTemp;
+				cout << "Insira o dia do seu nascimento: ";
+				cin >> diaTemp;
+				cout << "Insira o mes do seu nascimento: ";
+				cin >> mesTemp;
+				cout << "Insira o ano do seu nascimento: ";
+				cin >> anoTemp;
+						
+			}
+		}
+		
+		objetosInseridos[i] = Contato(emailTemp, nomeTemp, telefoneTemp);
+
+		datasObjetos[i] = Data (diaTemp, mesTemp, anoTemp);
+		
+		auxNasc[i] = datasObjetos[i];
+		
+		objetosInseridos[i].setData(auxNasc[i]); 
+	}
+	
+}	
+
+
+void ExibirUsuarios (Contato objetosInseridos[]){
+	
+	cout << endl << "Os usuarios cadastrados: " << endl;
+	
+	for (int i = 0; i <10; i++){
+		
+		cout << "USUARIO: " << i+1 << endl;
+
+		cout << "Nome: " << objetosInseridos[i].getNome() << endl;
+		cout << "email: " << objetosInseridos[i].getEmail() << endl;
+		cout << "Telefone: " << objetosInseridos[i].getTelefone() << endl;
+		cout << "Data de nascimento: " << objetosInseridos[i].getNascData() << "| Idade: " << objetosInseridos[i].getIdade() << endl << endl;
+	}
+
+}
+
+double CalcularIdadeMedia(Contato objetosInseridos[]){
+	
+	double media = 0;
+	
+	for (int i = 0; i < 10; i++) {
+		media += objetosInseridos[i].getIdade();
+	}
+	
+	return media/10;
+	
+}
+
+void ContatosAcimaDaMedia(Contato objetosInseridos[]){
+	
+	double media = CalcularIdadeMedia(objetosInseridos);
+	int qntd = 0;
+	
+	for (int i = 0; i < 10; i++){
+		if (objetosInseridos[i].getIdade() > media){
+			qntd++;
+		}	
+	}	
+	
+	cout << "Contatos com idade acima da media: " << qntd <<"."<< endl;
+	
+	for (int i = 0; i < 10; i++){
+		if (objetosInseridos[i].getIdade() > media){
+			cout << objetosInseridos[i].getNome() << " - " << objetosInseridos[i].getIdade() << " anos."<< endl;
+		}	
+	}
+	
+	cout << endl;
+}
+
+void ContatosMaiores(Contato objetosInseridos[]){
+	
+	int qntd = 0;
+	
+	for (int i = 0; i < 10; i++){
+		if (objetosInseridos[i].getIdade() > 18){
+			qntd++;
+		}	
+	}	
+	
+	if (qntd > 0){
+		cout << "Contatos maiores de idade: " << qntd << "." << endl;
+	}
+	
+	for (int i = 0; i < 10; i++){
+		if (objetosInseridos[i].getIdade() > 18){
+			cout << objetosInseridos[i].getNome() << " - " << objetosInseridos[i].getIdade() << " anos."<< endl;
+		}	
+	}
+	
+	cout << endl;
+}
+
+void ContatoMaisVelho(Contato objetosInseridos[]){
+	
+	int maiorIdade = 0;
+	int idadeAtual = 0;
+	
+	for (int i = 0; i < 10; i++){
+		idadeAtual = objetosInseridos[i].getIdade();
+		if (idadeAtual > maiorIdade){
+			maiorIdade = idadeAtual;
+		}	
+	}	
+
+	cout << "A maior idade eh: " << maiorIdade << ". O(s) que possui(em) essa idade: " << endl;
+	
+	for (int i = 0; i < 10; i++){
+
+		if (objetosInseridos[i].getIdade() == maiorIdade){
+			cout << objetosInseridos[i].getNome() << " - " << objetosInseridos[i].getEmail() << " - " << objetosInseridos[i].getTelefone() << endl;
+		}	
+	}
+	
+	cout << endl;
+}
+
+			
+int main(int argc, char** argv)
+{
+
+	Contato *objetosInseridos = new Contato[10];
+	Data *datasObjetos = new Data[10];
+	Data auxNasc [10];
+	
+	//CADASTRAR OS 10 USUARIOS
+	CadastrarUsuarios(objetosInseridos, datasObjetos);
+	
+	// EXIBINDO USUARIOS CADASTRADOS
+	ExibirUsuarios(objetosInseridos);
+	
+	// EXIBINDO MEDIA DAS IDADES CADASTRADAS
+	cout << "Media das idades: " << CalcularIdadeMedia(objetosInseridos) << endl << endl;
+	
+	// EXIBINDO CONTATOS QUE POSSUEM IDADE MAIOR QUE A MEDIA
+	ContatosAcimaDaMedia(objetosInseridos);
+	
+	// CONTATOS MAIORES DE IDADE
+	ContatosMaiores(objetosInseridos);
+	
+	// CONTATOS MAIS VELHO
+	ContatoMaisVelho(objetosInseridos);
+}
