@@ -1,0 +1,150 @@
+//Renan Josué Silva de Matos CB:3007162
+#include <iostream>
+using  namespace std;
+
+struct No {
+	int dado;
+	struct No *prox;
+};
+
+struct Pilha {
+	No *topo;
+};
+
+Pilha* init() {
+	Pilha *p = new Pilha;
+	p->topo = NULL;
+	return p;
+}
+
+// VERIFICA SE A PILHA ESTA VAZIA
+int isEmpty(Pilha *p) {
+	return (p->topo == NULL);
+}
+
+
+// INSERINDO NOVO VALOR NA PILHA
+void push(Pilha *p, int v) {
+	
+	No *no = new No;
+	
+	no->dado = v;
+	no->prox = p->topo;
+	p->topo = no;
+	
+}
+
+
+// REMOVER VALOR DA PILHA
+int pop(Pilha *p) {
+	int ret;
+	No *no = p->topo;
+	ret = no->dado;
+	p->topo = no->prox;
+	free(no);
+	return ret;
+}
+
+
+
+// EXIBIR ELEMENTOS DA PILHA
+void print(Pilha *p) {
+	cout << endl << "----- EXIBINDO ELEMENTOS DA PILHA -----" << endl;
+	No *no;
+	no = p->topo;
+	while(no != NULL) {
+		cout << no->dado << endl;
+		no = no->prox;
+	}
+	cout << "---------------------------------------" << endl << endl;
+}
+
+
+// CONTAR A QUANTIDADE DE ELEMENTOS NA PILHA
+int count(Pilha *p) {
+	int qtde = 0;
+	No *no;
+	no = p->topo;
+	while(no != NULL) {
+        qtde++;   
+		no = no->prox;
+	}
+	return qtde;
+}
+
+
+// DELETELAR A PILHA
+void freePilha(Pilha *p) {
+	No *no = p->topo;
+	while (no != NULL) {
+		No *temp = no->prox;
+		free(no);
+		no = temp;
+	}
+	free(p);
+}
+
+
+int main(int argc, char** argv)
+{
+	int number;
+	
+	Pilha *pilhaFloat;
+	pilhaFloat = init();
+	
+	
+	Pilha *pilhaImpar;
+	pilhaImpar = init();
+	
+	Pilha *pilhaPar;
+	pilhaPar = init();
+	
+	
+	
+	cout << "Pilha vazia: " << (isEmpty(pilhaFloat)?"Sim":"Nao") << endl;
+	cout << "Qtde de nos: " << count(pilhaFloat) << endl;
+		
+		
+	// INSERINDO OS 30 INTEIROS.
+	for (int i = 0; i < 30; i++){
+		
+		if ( i == 0){
+			cout << "Insira o primeiro inteiro da pilha: ";
+			cin >> number; 
+
+		} else {
+			do {
+				cout << "Insira um inteiro maior que "<< pilhaFloat->topo->dado << ": ";
+				cin >> number; 
+				
+				if(number <= pilhaFloat->topo->dado){
+					cout << "O valor inserido eh menor ou igual ao ultimo valor da pilha! (Ultimo valor: "<< pilhaFloat->topo->dado << ")" << endl;
+				};
+			
+			} while(number <= pilhaFloat->topo->dado);
+		}
+		
+		if (number % 2 == 0 ){
+			push(pilhaPar, number);
+		} else {
+			push(pilhaImpar, number);
+		}
+		
+		push(pilhaFloat, number);				
+	}
+	
+
+	cout << endl << "-----------  PILHA INTEIRA  -----------";
+	print(pilhaFloat);
+	cout << endl << "------------  PILHA IMPAR  ------------";
+	print(pilhaImpar);
+	cout << endl << "-------------  PILHA PAR  -------------";
+	print(pilhaPar);
+	
+	
+	freePilha(pilhaFloat);
+	freePilha(pilhaPar);
+	freePilha(pilhaImpar);
+	
+	return 0;
+}
