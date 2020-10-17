@@ -1,0 +1,194 @@
+/*
+Renan Josué Silva de Matos  	CB3007162
+
+
+#include <iostream>
+using namespace std;
+
+#include <stdio.h>
+#include <time.h>
+
+class Data
+{
+	private: 	
+	   int dia;
+	   int mes;
+	   int ano;	
+	   string datacompleta;
+	   
+    public:
+    	Data(int dia, int mes, int ano)
+		{
+			this -> dia = dia;
+			this -> mes = mes;
+			this -> ano = ano;
+		}
+		
+		Data()
+		{
+			this-> dia = 0;
+			this-> mes = 0;
+			this-> ano = 0;
+		}
+		
+    	void setDia(int dia)
+    	{
+			this->dia = dia;
+		}
+		void setMes(int mes)
+    	{
+			this->mes = mes;
+		}
+		void setAno(int ano)
+    	{
+			this->ano = ano;
+		}
+		
+		int getDia()
+		{
+			return this->dia;
+		}
+		int getMes()
+		{
+			return this->mes;
+		}
+		int getAno()
+		{
+			return this->ano;
+		}
+				
+		string getNascData()
+		{
+		    return to_string(this -> dia) + "/" + to_string(this -> mes) + "/" + to_string(this -> ano);
+		}
+		
+};
+
+class Contato
+{
+	private: 
+       string email;
+	   string nome;
+	   string telefone;	
+	   Data datapessoa;	
+	   
+    public:
+    	Contato(string emailInformado, string nomeInformado, string telefoneInformado) {
+			this -> email = emailInformado;
+			this -> nome = nomeInformado;
+			this -> telefone = telefoneInformado;
+		}
+		Contato() {
+			this -> email = "";
+			this -> nome = "";
+			this -> telefone = "";
+		}
+		
+		void setEmail(string emailInformado) {
+			this -> email = emailInformado;
+		}
+		string getEmail () {
+			return this -> email;
+		}
+		
+		void setNome(string nomeInformado) {
+			this -> nome = nomeInformado;
+		}
+		string getNome () {
+			return this -> nome;
+		}
+		
+		void setTelefone(string telefoneInformado) {
+			this -> telefone = telefoneInformado;
+		}
+		string getTelefone (){
+			return this -> telefone;
+		}
+		
+		void setData(Data dataInformada){
+			this -> datapessoa = dataInformada;
+		}					
+		string getNascData (){
+			Data *dataClasse = &datapessoa;
+			return dataClasse -> getNascData();
+		}
+		
+		string getIdade (){
+			
+			// Pegando data atual do sistema
+			time_t mytime;
+		    mytime = time(NULL);
+		    struct tm tm = *localtime(&mytime);
+		    int atualDay = tm.tm_mday;  // DIA ATUAL
+		    int atualMonth = tm.tm_mon + 1; // MES ATUAL
+			int atualYear = tm.tm_year + 1900; // ANO ATUAL
+
+		    //RECEBENDO DATA DE ANIVERSARIO
+		    Data *dataClasse = &datapessoa;
+			
+			int bDay = dataClasse -> getDia();  // DIA DO ANIVERSARIO
+		    int bMonth = dataClasse -> getMes();  // MES DO ANIVERSARIO
+			int bYear = dataClasse -> getAno();  // ANO DO ANIVERSARIO 
+						
+			// CONFERINDO IDADE
+			if (atualMonth >= bMonth && atualDay >= bDay  ){
+				return to_string(atualYear-bYear);
+			} 
+			return to_string(atualYear-bYear-1);			
+		}
+
+};    
+				
+			
+int main(int argc, char** argv)
+{
+	int opcao = 1;    
+	string email = "lsaantos@outlook.com";
+	string nome = "Leandro Santos";
+	string telefone = "13988226584";
+	int dia = 03;
+	int mes = 07;
+	int ano = 2001;
+	
+	cout << "Deseja inserir as informacoes? [0]Sim - [1]Nao. ";
+	cin >> opcao;
+	
+	if (opcao == 0) {
+		cout << "Insira seu email: ";
+		cin >> email;
+		cout << "Insira seu nome: ";
+		cin >> nome;
+		cout << "Insira seu telefone: ";
+		cin >> telefone;
+		cout << "Insira o dia do seu nascimento: ";
+		cin >> dia;
+		cout << "Insira o mes do seu nascimento: ";
+		cin >> mes;
+		cout << "Insira o ano do seu nascimento: ";
+		cin >> ano;
+		opcao = 1;
+	}
+	
+	//CRIANDO OBJETO 'USER' DA CLASSE CONTATO
+	Contato *user = new Contato(email, nome, telefone);
+	
+	//CRIANDO OBJETO 'USERNASC' DA CLASSE DATA E DEFININDO ESTE OBJETO DENTRO DO OBJETO 'USER'
+	Data *usernasc = new Data(dia, mes, ano);
+	Data nasc2;
+	nasc2 =*usernasc;
+	user->setData(nasc2);
+	
+	//EXIBIR INFORMACOES	
+	cout << "Deseja exibir as informacoes? [0]Sim - [1]Nao. ";
+	cin >> opcao;
+	
+	if (opcao == 0) {
+		cout << endl << "Suas informacoes: " << endl;
+		cout << "Nome: " << user -> getNome() << endl;
+		cout << "email: " << user -> getEmail() << endl;
+		cout << "Telefone: " << user -> getTelefone() << endl;
+		cout << "Idade: " << user -> getIdade() << " || Data de nascimento: " << user -> getNascData() << endl;
+	}
+		
+	return 0;
+}
